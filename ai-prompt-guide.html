@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Engineering Guide - Learn to Craft Better Prompts</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-tabs button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .nav-tabs button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-tabs button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .content {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        .content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin-bottom: 0.75rem;
+            font-size: 1.3rem;
+        }
+
+        .section p {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .example-box {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 5px;
+        }
+
+        .example-box strong {
+            color: #667eea;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-item {
+            padding: 1.5rem;
+            border-radius: 5px;
+            border: 2px solid #ddd;
+        }
+
+        .comparison-item.bad {
+            background: #ffebee;
+            border-color: #e57373;
+        }
+
+        .comparison-item.good {
+            background: #e8f5e9;
+            border-color: #81c784;
+        }
+
+        .comparison-item h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .comparison-item.bad h4 {
+            color: #c62828;
+        }
+
+        .comparison-item.good h4 {
+            color: #2e7d32;
+        }
+
+        .comparison-item p {
+            margin: 0;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        .tips-box {
+            background: #fff3e0;
+            border: 2px solid #ffb74d;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin: 1.5rem 0;
+        }
+
+        .tips-box h4 {
+            color: #f57c00;
+            margin-bottom: 0.75rem;
+        }
+
+        .tips-box ul {
+            margin-left: 1.5rem;
+        }
+
+        .tips-box li {
+            margin-bottom: 0.5rem;
+        }
+
+        .prompt-template {
+            background: #eceff1;
+            border: 2px solid #607d8b;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1.5rem 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+        }
+
+        .interactive-demo {
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin: 1.5rem 0;
+        }
+
+        .interactive-demo textarea {
+            width: 100%;
+            padding: 1rem;
+            font-family: 'Monaco', 'Courier New', monospace;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 0.95rem;
+            resize: vertical;
+            margin: 1rem 0;
+        }
+
+        .interactive-demo button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .interactive-demo button:hover {
+            background: #764ba2;
+        }
+
+        .checklist {
+            background: #fafafa;
+            padding: 1rem;
+            border-radius: 5px;
+            margin: 1.5rem 0;
+        }
+
+        .checklist label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+        }
+
+        .checklist input {
+            margin-right: 0.75rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tabs button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🤖 AI Prompt Engineering Guide</h1>
+        <p>Master the art of communicating effectively with AI systems</p>
+    </header>
+
+    <div class="container">
+        <div class="nav-tabs">
+            <button class="tab-button active" data-tab="basics">Basics</button>
+            <button class="tab-button" data-tab="techniques">Techniques</button>
+            <button class="tab-button" data-tab="examples">Examples</button>
+            <button class="tab-button" data-tab="checklist">Checklist</button>
+        </div>
+
+        <!-- Basics Tab -->
+        <div id="basics" class="content active">
+            <h2>🎯 Prompt Engineering Basics</h2>
+
+            <div class="section">
+                <h3>What is Prompt Engineering?</h3>
+                <p>Prompt engineering is the practice of designing and refining instructions (prompts) to get better responses from AI models. It's about learning how to communicate effectively with AI systems to achieve your desired outcomes.</p>
+                <p>Think of it as giving clear, specific instructions—the better you explain what you want, the better the AI understands and delivers.</p>
+            </div>
+
+            <div class="section">
+                <h3>Why Does It Matter?</h3>
+                <div class="tips-box">
+                    <h4>✨ Key Benefits:</h4>
+                    <ul>
+                        <li><strong>Better Results:</strong> Well-crafted prompts produce more accurate and relevant responses</li>
+                        <li><strong>Saves Time:</strong> Fewer iterations needed to get what you want</li>
+                        <li><strong>Consistency:</strong> Repeatable prompts yield similar quality results</li>
+                        <li><strong>Efficiency:</strong> Get the exact format and tone you need on the first try</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Core Principles</h3>
+                <div class="example-box">
+                    <strong>1. Clarity:</strong> Be specific about what you want. Vague requests lead to vague answers.
+                </div>
+                <div class="example-box">
+                    <strong>2. Context:</strong> Provide background information so the AI understands the situation.
+                </div>
+                <div class="example-box">
+                    <strong>3. Constraints:</strong> Set limitations on length, format, tone, or style.
+                </div>
+                <div class="example-box">
+                    <strong>4. Examples:</strong> Show examples of what you want (few-shot learning).
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Prompt Structure</h3>
+                <p>A well-structured prompt typically includes:</p>
+                <div class="prompt-template">
+                    <strong>Role:</strong> [Who should the AI be?]<br><br>
+                    <strong>Task:</strong> [What should it do?]<br><br>
+                    <strong>Context:</strong> [What background info is needed?]<br><br>
+                    <strong>Constraints:</strong> [Any limitations?]<br><br>
+                    <strong>Examples:</strong> [Show a few examples (optional)]<br><br>
+                    <strong>Output Format:</strong> [How should the answer be structured?]
+                </div>
+            </div>
+        </div>
+
+        <!-- Techniques Tab -->
+        <div id="techniques" class="content">
+            <h2>🛠️ Advanced Techniques</h2>
+
+            <div class="section">
+                <h3>1. Role-Playing / Persona</h3>
+                <p>Assign a specific role to the AI to get responses from that perspective.</p>
+                <div class="comparison">
+                    <div class="comparison-item bad">
+                        <h4>❌ Without Role</h4>
+                        <p>"Write a poem about coding"</p>
+                    </div>
+                    <div class="comparison-item good">
+                        <h4>✅ With Role</h4>
+                        <p>"Act as a motivational tech coach. Write a poem about coding that inspires beginners to learn programming."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>2. Few-Shot Learning</h3>
+                <p>Provide examples of the desired output format before asking for the actual task.</p>
+                <div class="example-box">
+                    <strong>Example:</strong> "Here are examples of product reviews I like. Please write a similar review for [product]:<br><br>
+                    Example 1: [Review text]<br>
+                    Example 2: [Review text]<br><br>
+                    Now write a review for: [My product]"
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>3. Chain of Thought (CoT)</h3>
+                <p>Ask the AI to explain its reasoning step-by-step before giving the final answer.</p>
+                <div class="comparison">
+                    <div class="comparison-item bad">
+                        <h4>❌ Direct Question</h4>
+                        <p>"Is this code efficient?"</p>
+                    </div>
+                    <div class="comparison-item good">
+                        <h4>✅ Chain of Thought</h4>
+                        <p>"Analyze this code step-by-step. First, explain what it does. Then, identify potential performance issues. Finally, tell me if it's efficient and why."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>4. Prompt Chaining</h3>
+                <p>Break complex tasks into multiple prompts where each builds on the previous response.</p>
+                <div class="example-box">
+                    <strong>Prompt 1:</strong> "Analyze this dataset..."<br>
+                    <strong>Prompt 2:</strong> "Based on your analysis, what insights can you draw?"<br>
+                    <strong>Prompt 3:</strong> "Now provide recommendations based on those insights."
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>5. Specifying Output Format</h3>
+                <p>Be explicit about how you want the information structured.</p>
+                <div class="example-box">
+                    <strong>Example:</strong> "Provide the response as a JSON object with keys: 'title', 'description', 'pros', 'cons'"
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>6. Temperature & Creativity Control</h3>
+                <p>When available, adjust parameters to control creativity vs. consistency:</p>
+                <div class="tips-box">
+                    <h4>💡 Parameter Tips:</h4>
+                    <ul>
+                        <li><strong>Low Temperature (0.1-0.3):</strong> More factual, consistent, and predictable</li>
+                        <li><strong>Medium Temperature (0.5-0.7):</strong> Balanced between creativity and consistency</li>
+                        <li><strong>High Temperature (0.8-1.0):</strong> More creative, varied, and unpredictable</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Examples Tab -->
+        <div id="examples" class="content">
+            <h2>📚 Real-World Examples</h2>
+
+            <div class="section">
+                <h3>Example 1: Content Writing</h3>
+                <p><strong>Task:</strong> Write a blog post introduction</p>
+                <div class="prompt-template">
+                    <strong>Prompt:</strong><br>
+                    "You are an experienced tech blogger writing for developers. Write a 150-word introduction for a blog post about Python decorators. The tone should be friendly but professional. Start with a hook that relates to a common programming problem."
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Example 2: Code Generation</h3>
+                <p><strong>Task:</strong> Generate code with specific requirements</p>
+                <div class="prompt-template">
+                    <strong>Prompt:</strong><br>
+                    "Write a Python function that:<br>
+                    1. Takes a list of integers as input<br>
+                    2. Returns the sum of even numbers<br>
+                    3. Includes error handling for non-list inputs<br>
+                    4. Has a docstring explaining the function<br>
+                    5. Includes 2-3 test cases<br><br>
+                    Format the code with clear comments."
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Example 3: Learning & Tutoring</h3>
+                <p><strong>Task:</strong> Explain a concept</p>
+                <div class="prompt-template">
+                    <strong>Prompt:</strong><br>
+                    "Act as a patient math tutor. Explain the concept of derivatives to a high school student using:<br>
+                    1. A simple analogy first<br>
+                    2. A step-by-step mathematical explanation<br>
+                    3. A real-world example<br>
+                    4. 2 practice problems with solutions"
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Example 4: Data Analysis</h3>
+                <p><strong>Task:</strong> Analyze and interpret data</p>
+                <div class="prompt-template">
+                    <strong>Prompt:</strong><br>
+                    "Analyze this dataset: [DATA]<br><br>
+                    Please provide:<br>
+                    1. A summary of key statistics<br>
+                    2. Three main insights<br>
+                    3. Potential causes for any anomalies<br>
+                    4. Two actionable recommendations<br><br>
+                    Format as a markdown report."
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Example 5: Creative Writing</h3>
+                <p><strong>Task:</strong> Generate creative content</p>
+                <div class="prompt-template">
+                    <strong>Prompt:</strong><br>
+                    "Write a short sci-fi story (300 words) where:<br>
+                    - The main character is an AI learning to feel emotions<br>
+                    - Setting: A space station<br>
+                    - Include a plot twist at the end<br>
+                    - Use vivid sensory descriptions<br>
+                    - Target audience: sci-fi enthusiasts aged 18-45"
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist Tab -->
+        <div id="checklist" class="content">
+            <h2>✅ Prompt Quality Checklist</h2>
+            <p>Use this checklist to evaluate and improve your prompts:</p>
+
+            <div class="checklist">
+                <label>
+                    <input type="checkbox">
+                    <strong>Clarity:</strong> Is the request clearly stated without ambiguity?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Specificity:</strong> Have I been specific about what I want?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Context:</strong> Have I provided enough background information?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Constraints:</strong> Are length, format, and tone clearly specified?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Role Assignment:</strong> Have I assigned a helpful role to the AI (if applicable)?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Examples:</strong> Have I provided examples of desired output (if needed)?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Output Format:</strong> Is the expected format clearly defined?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Keywords:</strong> Does it include relevant keywords for the task?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Actionable:</strong> Is the request actionable for the AI?
+                </label>
+                <label>
+                    <input type="checkbox">
+                    <strong>Tested:</strong> Have I tested the prompt and refined it based on results?
+                </label>
+            </div>
+
+            <div class="section">
+                <h3>💡 Pro Tips for Better Prompts</h3>
+                <div class="tips-box">
+                    <ul>
+                        <li><strong>Be Direct:</strong> State your request clearly at the beginning</li>
+                        <li><strong>Use Structured Lists:</strong> Use numbering or bullet points for requirements</li>
+                        <li><strong>Avoid Jargon (when unclear):</strong> Use simple language unless technical terms are precise</li>
+                        <li><strong>Iterate & Refine:</strong> Don't settle for the first result; ask follow-up questions</li>
+                        <li><strong>Test Edge Cases:</strong> Ask for error handling and edge case consideration</li>
+                        <li><strong>Request Explanations:</strong> Ask "why" to get better reasoning from the AI</li>
+                        <li><strong>Use Separators:</strong> Use dashes, numbers, or markers to organize your prompt</li>
+                        <li><strong>Specify Audience:</strong> Tell the AI who the output is for (beginners vs. experts, etc.)</li>
+                        <li><strong>Ask for Revisions:</strong> Request multiple drafts and select the best one</li>
+                        <li><strong>Provide Reference Material:</strong> Share examples, documents, or links for context</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>🎓 Common Mistakes to Avoid</h3>
+                <div class="comparison">
+                    <div class="comparison-item bad">
+                        <h4>❌ Too Vague</h4>
+                        <p>"Write something about AI"</p>
+                    </div>
+                    <div class="comparison-item good">
+                        <h4>✅ Specific</h4>
+                        <p>"Write a 500-word article about AI applications in healthcare for patients, explaining complex concepts simply"</p>
+                    </div>
+                </div>
+
+                <div class="comparison">
+                    <div class="comparison-item bad">
+                        <h4>❌ Missing Context</h4>
+                        <p>"Fix this code"</p>
+                    </div>
+                    <div class="comparison-item good">
+                        <h4>✅ With Context</h4>
+                        <p>"This Python function should calculate user ages from birth dates but returns errors for dates before 1900. Debug it and add validation"</p>
+                    </div>
+                </div>
+
+                <div class="comparison">
+                    <div class="comparison-item bad">
+                        <h4>❌ Unclear Requirements</h4>
+                        <p>"Make it better"</p>
+                    </div>
+                    <div class="comparison-item good">
+                        <h4>✅ Clear Requirements</h4>
+                        <p>"Improve readability by adding comments, optimize for O(n) time complexity, and add type hints"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>🚀 Start crafting better prompts today and unlock the full potential of AI!</p>
+        <p style="margin-top: 1rem; opacity: 0.8; font-size: 0.9rem;">Learn. Practice. Master. | AI Prompt Engineering Guide</p>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const contents = document.querySelectorAll('.content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                contents.forEach(content => content.classList.remove('active'));
+
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Checklist functionality
+        const checkboxes = document.querySelectorAll('.checklist input');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const label = this.closest('label');
+                if (this.checked) {
+                    label.style.opacity = '0.6';
+                    label.style.textDecoration = 'line-through';
+                } else {
+                    label.style.opacity = '1';
+                    label.style.textDecoration = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
